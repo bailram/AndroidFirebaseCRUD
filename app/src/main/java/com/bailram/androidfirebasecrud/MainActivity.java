@@ -27,8 +27,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     // use to pass artist name and id to another activity
-    private static final String ARTIST_NAME = "com.bailram.androidfirebasecrud.artistname";
-    private static final String ARTIST_ID = "com.bailram.androidfirebasecrud.artistid";
+    public static final String ARTIST_NAME = "com.bailram.androidfirebasecrud.artistname";
+    public static final String ARTIST_ID = "com.bailram.androidfirebasecrud.artistid";
 
     // view object
     private EditText editTextName;
@@ -67,6 +67,23 @@ public class MainActivity extends AppCompatActivity {
                 addArtist();
             }
         });
+
+        listViewArtist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // getting the selected artist
+                Artist artist = artists.get(i);
+
+                // creating an intent
+                Intent intent = new Intent(getApplicationContext(), ArtistActivity.class);
+                // putting artist name and id to intent
+                intent.putExtra(ARTIST_ID, artist.getArtistId());
+                intent.putExtra(ARTIST_NAME, artist.getArtistName());
+
+                // starting the activity with intent
+                startActivity(intent);
+            }
+        });
     }
 
     /*
@@ -99,23 +116,6 @@ public class MainActivity extends AppCompatActivity {
             // if the value from edittextname is not given displaying a toast
             Toast.makeText(this, "Please enter a name", Toast.LENGTH_SHORT).show();
         }
-
-        listViewArtist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // getting the selected artist
-                Artist artist = artists.get(i);
-
-                // creating an intent
-                Intent intent = new Intent(getApplicationContext(), ArtistActivity.class);
-                // putting artist name and id to intent
-                intent.putExtra(ARTIST_ID, artist.getArtistId());
-                intent.putExtra(ARTIST_NAME, artist.getArtistName());
-
-                // starting the activity with intent
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
