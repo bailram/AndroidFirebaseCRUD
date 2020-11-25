@@ -3,9 +3,11 @@ package com.bailram.androidfirebasecrud;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -97,6 +99,23 @@ public class MainActivity extends AppCompatActivity {
             // if the value from edittextname is not given displaying a toast
             Toast.makeText(this, "Please enter a name", Toast.LENGTH_SHORT).show();
         }
+
+        listViewArtist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // getting the selected artist
+                Artist artist = artists.get(i);
+
+                // creating an intent
+                Intent intent = new Intent(getApplicationContext(), ArtistActivity.class);
+                // putting artist name and id to intent
+                intent.putExtra(ARTIST_ID, artist.getArtistId());
+                intent.putExtra(ARTIST_NAME, artist.getArtistName());
+
+                // starting the activity with intent
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
