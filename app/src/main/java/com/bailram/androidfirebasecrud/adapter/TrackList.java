@@ -35,6 +35,7 @@ public class TrackList extends ArrayAdapter<Track> {
         TextView textViewName = listViewItem.findViewById(R.id.textViewName);
         TextView textViewRating = listViewItem.findViewById(R.id.textViewGenre);
 
+
          Track track = tracks.get(position);
          textViewName.setText(track.getTrackName());
          textViewRating.setText(String.valueOf(track.getRating()));

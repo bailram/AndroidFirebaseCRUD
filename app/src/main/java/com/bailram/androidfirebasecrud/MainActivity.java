@@ -1,11 +1,13 @@
 package com.bailram.androidfirebasecrud;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // add onclicklistener to item listview to handle when item clicked will do intent
         listViewArtist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -82,6 +85,58 @@ public class MainActivity extends AppCompatActivity {
 
                 // starting the activity with intent
                 startActivity(intent);
+            }
+        });
+
+        /*
+         * add onlongclicklistener to item listview to handle when item click and hold just for while
+         * */
+        listViewArtist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Artist artist = artists.get(i);
+                showUpdateDeleteDialog(artist.getArtistId(), artist.getArtistName());
+                return true;
+            }
+        });
+    }
+
+    /*
+     * This method is to show dialog update or delete dialog
+     * */
+    private void showUpdateDeleteDialog(final String artistId, String artistName) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater layoutInflater = getLayoutInflater();
+        final View dialogView = layoutInflater.inflate(R.layout.update_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText editTextName = dialogView.findViewById(R.id.editTextName);
+        final Spinner spinnerGenre = dialogView.findViewById(R.id.spinnerGenres);
+        final Button buttonUpdate = dialogView.findViewById(R.id.buttonUpdateArtist);
+        final Button buttonDelete = dialogView.findViewById(R.id.buttonDeleteArtist);
+
+        dialogBuilder.setTitle(artistName);
+        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+
+        // add onclicklistener to button update on dialog
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = editTextName.getText().toString().trim();
+                String genre = spinnerGenre.getSelectedItem().toString();
+                if(!TextUtils.isEmpty(name)) {
+                    updateArtist(artistId, name, genre);
+                    alertDialog.dismiss();
+                }
+            }
+        });
+
+        // add onclicklistener to button delete on dialog
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: do delete artist
             }
         });
     }
@@ -116,6 +171,21 @@ public class MainActivity extends AppCompatActivity {
             // if the value from edittextname is not given displaying a toast
             Toast.makeText(this, "Please enter a name", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /*
+     * This method is updating a artist data to the
+     * Firebase Realtime Database
+     * */
+    private boolean updateArtist(String id, String name, String genre){
+        // getting the specified artist reference
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("artists").child(id);
+
+        // updating artist
+        Artist artist = new Artist(id, name, genre);
+        databaseReference.setValue(artist);
+        Toast.makeText(getApplicationContext(), "Artist Updated", Toast.LENGTH_SHORT).show();
+        return true;
     }
 
     @Override
