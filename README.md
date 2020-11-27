@@ -24,5 +24,5 @@ if you want to learn more about android with firebase realtime database check it
 https://www.simplifiedcoding.net/firebase-realtime-database-crud/ <br>
 or <br>
 if you want to learn android with firebase realtime database with video check it out <br>
-https://youtu.be/EM2x33g4syY <br>
+https://www.youtube.com/playlist?list=PLk7v1Z2rk4hj6SDHf_YybDeVhUT9MXaj1 <br>
 and don't forget to slap the like button
