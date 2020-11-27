@@ -136,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: do delete artist
+                deleteArtist(artistId);
+                alertDialog.dismiss();
             }
         });
     }
@@ -185,6 +186,27 @@ public class MainActivity extends AppCompatActivity {
         Artist artist = new Artist(id, name, genre);
         databaseReference.setValue(artist);
         Toast.makeText(getApplicationContext(), "Artist Updated", Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
+    /*
+     * This method is deleting a artist data to the
+     * Firebase Realtime Database
+     * */
+    private boolean deleteArtist(String id) {
+        // getting the specified artist reference
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("artists").child(id);
+
+        // removing artist
+        databaseReference.removeValue();
+
+        // getting the tracks reference for the specified artist
+        DatabaseReference databaseReferenceTrack = FirebaseDatabase.getInstance().getReference("tracks").child(id);
+
+        // removing all tracks with id are same with artist id was deleted
+        databaseReferenceTrack.removeValue();
+        Toast.makeText(getApplicationContext(), "Artist Deleted", Toast.LENGTH_SHORT).show();
+
         return true;
     }
 
